@@ -20,13 +20,13 @@ jobs:
           fetch-depth: 0
       - name: Execute Gradle build
         run: ./gradlew build
-        working-directory: ./app
+        working-directory: .
       - name: Run tests
         run: make test
-        working-directory: ./app
+        working-directory: .
       - name: Generate coverage report
         run: make report
-        working-directory: ./app
+        working-directory: .
       - name: Cache SonarQube packages
         uses: actions/cache@v4
         with:
