@@ -50,9 +50,13 @@ dependencies {
     // Tests
     testImplementation(libs.springBootStarterTest)
     testImplementation(libs.springSecurityTest)
+    testImplementation(libs.instancioJunit)
     testImplementation(platform(libs.junitBom))
     testImplementation(libs.junitJupiter)
+    testImplementation(libs.jsonunitAssertj)
     testRuntimeOnly(libs.junitPlatformLauncher)
+
+    implementation(libs.datafaker)
 }
 
 tasks.test {

@@ -10,7 +10,6 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
@@ -40,5 +39,9 @@ public class User {
     private LocalDate createdAt;
 
     @LastModifiedDate
-    private LocalDateTime updatedAt;
+    private LocalDate updatedAt;
+
+    public String getPassword() {
+        return passwordDigest;
+    }
 }
