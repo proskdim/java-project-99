@@ -33,14 +33,19 @@ dependencies {
     implementation(libs.springBootStarterDataJpa)
     implementation(libs.springBootStarterValidation)
     implementation(libs.springBootStarterActuator)
-//    implementation(libs.springBootStarterSecurity)
-//    implementation(libs.springBootStarterOauth2ResourceServer)
+    implementation(libs.springBootStarterSecurity)
+    implementation(libs.springBootStarterOauth2ResourceServer)
     implementation(libs.springBootDevtools)
     implementation(libs.springBootConfigProcessor)
 
     // DB
     implementation(libs.postgresql)
     runtimeOnly(libs.h2)
+
+    //tools
+    implementation(libs.jacksonDatabindNullable)
+    implementation(libs.mapstruct)
+    annotationProcessor(libs.mapstructProcessor)
 
     // Tests
     testImplementation(libs.springBootStarterTest)
