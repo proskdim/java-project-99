@@ -44,4 +44,8 @@ public class User {
     public String getPassword() {
         return passwordDigest;
     }
+
+    public void setPassword(String password) {
+        this.passwordDigest = password;
+    }
 }
