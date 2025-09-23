@@ -39,6 +39,7 @@ dependencies {
     implementation(libs.springBootConfigProcessor)
 
     // DB
+    implementation(libs.postgresql)
     runtimeOnly(libs.h2)
 
     // Tests
