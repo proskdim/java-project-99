@@ -12,8 +12,6 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
-
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
@@ -61,10 +59,6 @@ public class User implements UserDetails {
         return email;
     }
 
-    public void setPassword(String password) {
-        this.passwordDigest = password;
-    }
-
     @Override
     public boolean isAccountNonExpired() {
         return true;
@@ -78,5 +72,9 @@ public class User implements UserDetails {
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
+    }
+
+    public void setPassword(String password) {
+        this.passwordDigest = password;
     }
 }

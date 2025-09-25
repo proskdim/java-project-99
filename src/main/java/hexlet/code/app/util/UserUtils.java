@@ -1,11 +1,10 @@
 package hexlet.code.app.util;
 
+import hexlet.code.app.model.User;
+import hexlet.code.app.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-
-import hexlet.code.app.model.User;
-import hexlet.code.app.repository.UserRepository;
 
 @Component
 public class UserUtils {

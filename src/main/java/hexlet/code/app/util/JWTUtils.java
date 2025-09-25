@@ -16,12 +16,8 @@ public final class JWTUtils {
 
     public String generateToken(String username) {
         var now = Instant.now();
-        var claims = JwtClaimsSet.builder()
-                .issuer("self")
-                .issuedAt(now)
-                .expiresAt(now.plus(1, ChronoUnit.HOURS))
-                .subject(username)
-                .build();
+        var claims = JwtClaimsSet.builder().issuer("self").issuedAt(now).expiresAt(now.plus(1, ChronoUnit.HOURS))
+                .subject(username).build();
         var params = JwtEncoderParameters.from(claims);
         return encoder.encode(params).getTokenValue();
     }
