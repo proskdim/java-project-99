@@ -1,5 +1,6 @@
 package hexlet.code.app.util;
 
+import hexlet.code.app.model.Task;
 import hexlet.code.app.model.TaskStatus;
 import hexlet.code.app.model.User;
 import net.datafaker.Faker;
@@ -14,6 +15,12 @@ public final class ModelGenerator {
 
     @Autowired
     private Faker faker;
+
+    public Model<Task> taskModel() {
+        return Instancio.of(Task.class).ignore(Select.field(Task::getId))
+                .supply(Select.field(Task::getAssignee), () -> Instancio.create(userModel()))
+                .supply(Select.field(Task::getTaskStatus), () -> Instancio.create(taskStatusModel())).toModel();
+    }
 
     public Model<TaskStatus> taskStatusModel() {
         var name = faker.regexify("\\w{5,15}");
