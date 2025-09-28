@@ -17,6 +17,7 @@ public class UserUtils {
             return null;
         }
         var email = authentication.getName();
-        return userRepository.findByEmail(email).get();
+
+        return userRepository.findByEmail(email).orElse(null);
     }
 }
