@@ -1,8 +1,10 @@
 package hexlet.code.app.util;
 
+import hexlet.code.app.model.Label;
 import hexlet.code.app.model.Task;
 import hexlet.code.app.model.TaskStatus;
 import hexlet.code.app.model.User;
+import java.util.Set;
 import net.datafaker.Faker;
 import org.instancio.Instancio;
 import org.instancio.Model;
@@ -16,10 +18,15 @@ public final class ModelGenerator {
     @Autowired
     private Faker faker;
 
+    public Model<Label> labelModel() {
+        return Instancio.of(Label.class).ignore(Select.field(Label::getId)).toModel();
+    }
+
     public Model<Task> taskModel() {
         return Instancio.of(Task.class).ignore(Select.field(Task::getId))
                 .supply(Select.field(Task::getAssignee), () -> Instancio.create(userModel()))
-                .supply(Select.field(Task::getTaskStatus), () -> Instancio.create(taskStatusModel())).toModel();
+                .supply(Select.field(Task::getTaskStatus), () -> Instancio.create(taskStatusModel()))
+                .supply(Select.field(Task::getLabels), () -> Set.of(Instancio.create(labelModel()))).toModel();
     }
 
     public Model<TaskStatus> taskStatusModel() {

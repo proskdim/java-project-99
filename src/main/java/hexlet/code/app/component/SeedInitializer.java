@@ -1,7 +1,9 @@
 package hexlet.code.app.component;
 
+import hexlet.code.app.model.Label;
 import hexlet.code.app.model.TaskStatus;
 import hexlet.code.app.model.User;
+import hexlet.code.app.repository.LabelRepository;
 import hexlet.code.app.repository.TaskStatusRepository;
 import hexlet.code.app.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +23,20 @@ public class SeedInitializer implements CommandLineRunner {
     @Autowired
     private TaskStatusRepository taskStatusRepository;
 
+    @Autowired
+    private LabelRepository labelRepository;
+
     private final PasswordEncoder passwordEncoder;
 
     public SeedInitializer(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+    }
+
+    private void createLabel(String name) {
+        var label = new Label();
+        label.setName(name);
+        labelRepository.save(label);
     }
 
     private void createTaskStatus(String name, String slug) {
@@ -48,6 +59,14 @@ public class SeedInitializer implements CommandLineRunner {
 
         seedTaskStatuses();
         System.out.println("Добавлены статусы.");
+
+        seedLabels();
+        System.out.println("Добавлены метки.");
+    }
+
+    private void seedLabels() {
+        createLabel("feature");
+        createLabel("bug");
     }
 
     private void seedTaskStatuses() {

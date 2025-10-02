@@ -3,6 +3,7 @@ package hexlet.code.app.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
 import org.openapitools.jackson.nullable.JsonNullable;
@@ -29,6 +30,10 @@ public final class TaskUpdateDTO {
     @Setter
     @Getter
     @NotNull private JsonNullable<String> status;
+
+    @Setter
+    @Getter
+    private JsonNullable<Set<Long>> taskLabelIds;
 
     public @NotNull JsonNullable<Long> getAssigneeId() {
         return assigneeId;
