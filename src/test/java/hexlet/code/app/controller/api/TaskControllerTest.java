@@ -128,6 +128,29 @@ class TaskControllerTest {
 
     @Test
     @WithMockUser
+    public void testIndexWithFilterParams() throws Exception {
+        taskRepository.save(testTask);
+        var title = testTask.getName();
+        var assigneeId = testTask.getAssignee().getId();
+        var statusSlug = testTask.getTaskStatus().getSlug();
+        var labelId = testTask.getLabels().stream().findFirst().get().getId();
+
+        var url = "/api/tasks?titleCont=%s&assigneeId=%s&status=%s&labelId=%s".formatted(title, assigneeId, statusSlug,
+                labelId);
+
+        var result = mockMvc.perform(get(url)).andExpect(status().isOk()).andReturn();
+
+        var body = result.getResponse().getContentAsString();
+        assertThatJson(body).isArray().isNotEmpty().allSatisfy(el -> {
+            assertThatJson(el).and(v -> v.node("title").isEqualTo(title))
+                    .and(v -> v.node("assignee_id").isEqualTo(assigneeId))
+                    .and(v -> v.node("status").isEqualTo(statusSlug))
+                    .and(v -> v.node("taskLabelIds").isArray().contains(labelId));
+        });
+    }
+
+    @Test
+    @WithMockUser
     public void testShow() throws Exception {
         taskRepository.save(testTask);
         var response = mockMvc.perform(get("/api/tasks/" + testTask.getId())).andExpect(status().isOk()).andReturn();
@@ -172,4 +195,5 @@ class TaskControllerTest {
                 .content(objectMapper.writeValueAsString(data));
         mockMvc.perform(request).andExpect(status().isUnauthorized());
     }
+
 }

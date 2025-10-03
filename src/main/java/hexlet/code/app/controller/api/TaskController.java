@@ -6,6 +6,7 @@ import hexlet.code.app.dto.TaskParamsDTO;
 import hexlet.code.app.dto.TaskUpdateDTO;
 import hexlet.code.app.mapper.TaskMapper;
 import hexlet.code.app.repository.TaskRepository;
+import hexlet.code.app.specification.TaskSpecification;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -32,6 +33,9 @@ public final class TaskController {
     @Autowired
     private TaskMapper taskMapper;
 
+    @Autowired
+    private TaskSpecification taskSpecification;
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     TaskDTO create(@Valid @RequestBody TaskCreateDTO data) {
@@ -48,7 +52,8 @@ public final class TaskController {
 
     @GetMapping
     ResponseEntity<List<TaskDTO>> index(TaskParamsDTO params) {
-        var tasks = taskRepository.findAll();
+        var spec = taskSpecification.build(params);
+        var tasks = taskRepository.findAll(spec);
         var body = tasks.stream().map(taskMapper::map).toList();
         return ResponseEntity.ok().header("X-Total-Count", Integer.toString(body.size())).body(body);
     }

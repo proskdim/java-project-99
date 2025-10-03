@@ -13,4 +13,5 @@ public final class TaskParamsDTO {
 
     private String status;
 
+    private Long labelId;
 }
