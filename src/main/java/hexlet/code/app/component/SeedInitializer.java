@@ -14,9 +14,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class SeedInitializer implements CommandLineRunner {
 
-    private final String adminEmail = "hexlet@example.com";
-    private final String adminPassword = "qwerty";
-
     @Autowired
     private final UserRepository userRepository;
 
@@ -48,9 +45,11 @@ public class SeedInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+        String adminEmail = "hexlet@example.com";
         if (userRepository.findByEmail(adminEmail).isEmpty()) {
             User admin = new User();
             admin.setEmail(adminEmail);
+            String adminPassword = "qwerty";
             admin.setPassword(passwordEncoder.encode(adminPassword));
             userRepository.save(admin);
 
