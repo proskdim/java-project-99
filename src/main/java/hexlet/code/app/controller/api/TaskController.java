@@ -7,6 +7,8 @@ import hexlet.code.app.dto.TaskUpdateDTO;
 import hexlet.code.app.mapper.TaskMapper;
 import hexlet.code.app.repository.TaskRepository;
 import hexlet.code.app.specification.TaskSpecification;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -25,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/tasks")
+@Tag(name = "Контроллер задач", description = "Контроллер предназначен для создания задач которые выполняет пользователь")
 public final class TaskController {
 
     @Autowired
@@ -38,6 +41,10 @@ public final class TaskController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @Operation(
+            summary = "Создание задачи",
+            description = "Позволяет создать новую задачу в приложении"
+    )
     TaskDTO create(@Valid @RequestBody TaskCreateDTO data) {
         var task = taskMapper.map(data);
         taskRepository.save(task);
@@ -46,11 +53,19 @@ public final class TaskController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Operation(
+            summary = "Удаление задачи",
+            description = "Позволяет удалить задачу из приложения по её идентификатору"
+    )
     void destroy(@PathVariable Long id) {
         taskRepository.deleteById(id);
     }
 
     @GetMapping
+    @Operation(
+            summary = "Получение списка задач",
+            description = "Позволяет получить список всех задач добавленных в приложение"
+    )
     ResponseEntity<List<TaskDTO>> index(TaskParamsDTO params) {
         var spec = taskSpecification.build(params);
         var tasks = taskRepository.findAll(spec);
@@ -59,12 +74,20 @@ public final class TaskController {
     }
 
     @GetMapping("/{id}")
+    @Operation(
+            summary = "Получение задачи по идентификатору",
+            description = "Позволяет получить информацию об определенной задаче по идентификатору"
+    )
     TaskDTO show(@PathVariable Long id) {
         var task = taskRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Not found"));
         return taskMapper.map(task);
     }
 
     @PutMapping("/{id}")
+    @Operation(
+            summary = "Обновление задачи",
+            description = "Позволяет частично или полностью обновить информацию о задаче"
+    )
     TaskDTO update(@PathVariable Long id, @Valid @RequestBody TaskUpdateDTO data) {
         var task = taskRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Not found"));
         taskMapper.update(data, task);

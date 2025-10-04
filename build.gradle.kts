@@ -56,6 +56,9 @@ dependencies {
     testImplementation(libs.jsonunitAssertj)
     testRuntimeOnly(libs.junitPlatformLauncher)
 
+    // swagger
+    implementation(libs.springdocOpenapiUi)
+
     implementation(libs.datafaker)
 }
 
