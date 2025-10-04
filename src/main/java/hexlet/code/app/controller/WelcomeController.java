@@ -10,10 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class WelcomeController {
 
     @GetMapping("/welcome")
-    @Operation(
-            summary = "Возвращение строки приветствия",
-            description = "Возвращает строку приветсвия"
-    )
+    @Operation(summary = "Возвращение строки приветствия", description = "Возвращает строку приветсвия")
     public String welcome() {
         return "Welcome to Spring";
     }

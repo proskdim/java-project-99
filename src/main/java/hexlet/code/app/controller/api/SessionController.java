@@ -27,13 +27,10 @@ public final class SessionController {
 
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.CREATED)
-    @Operation(
-            summary = "Аутентифицировать пользователя и выдать JWT-токен",
-            description = "Принимает учётные данные пользователя (логин и пароль) и выполняет аутентификацию. " +
-                    "Если аутентификация проходит успешно, возвращает JWT-токен " +
-                    "В случае неверных учётных данных или отсутствия пользователя выбрасывается исключение " +
-                    "и возвращается ошибка 401 Unauthorized."
-    )
+    @Operation(summary = "Аутентифицировать пользователя и выдать JWT-токен", description = "Принимает учётные данные пользователя (логин и пароль) и выполняет аутентификацию. "
+            + "Если аутентификация проходит успешно, возвращает JWT-токен "
+            + "В случае неверных учётных данных или отсутствия пользователя выбрасывается исключение "
+            + "и возвращается ошибка 401 Unauthorized.")
     String create(@RequestBody AuthRequest authRequest) {
         var auth = new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword());
         authenticationManager.authenticate(auth);

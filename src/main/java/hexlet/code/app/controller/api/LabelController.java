@@ -36,10 +36,7 @@ public final class LabelController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @Operation(
-            summary = "Создание метки",
-            description = "Позволяет создать новую метку в приложении"
-    )
+    @Operation(summary = "Создание метки", description = "Позволяет создать новую метку в приложении")
     LabelDTO create(@Valid @RequestBody LabelCreateDTO data) {
         var label = labelMapper.map(data);
         labelRepository.save(label);
@@ -48,19 +45,13 @@ public final class LabelController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @Operation(
-            summary = "Удаление метки",
-            description = "Позволяет удалить метку из приложения по его идентификатору"
-    )
+    @Operation(summary = "Удаление метки", description = "Позволяет удалить метку из приложения по его идентификатору")
     void destroy(@PathVariable Long id) {
         labelRepository.deleteById(id);
     }
 
     @GetMapping
-    @Operation(
-            summary = "Получение списка меток",
-            description = "Позволяет получить список всех меток добавленных в приложение"
-    )
+    @Operation(summary = "Получение списка меток", description = "Позволяет получить список всех меток добавленных в приложение")
     ResponseEntity<List<LabelDTO>> index() {
         var labels = labelRepository.findAll();
         var body = labels.stream().map(labelMapper::map).toList();
@@ -68,20 +59,14 @@ public final class LabelController {
     }
 
     @GetMapping("/{id}")
-    @Operation(
-            summary = "Получение метки по идентификатору",
-            description = "Позволяет получить информацию об определенной метки по его идентификатору"
-    )
+    @Operation(summary = "Получение метки по идентификатору", description = "Позволяет получить информацию об определенной метки по его идентификатору")
     LabelDTO show(@PathVariable Long id) {
         var label = labelRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Not found"));
         return labelMapper.map(label);
     }
 
     @PutMapping("/{id}")
-    @Operation(
-            summary = "Обновление метки",
-            description = "Позволяет частично или полностью обновить информацию о метке"
-    )
+    @Operation(summary = "Обновление метки", description = "Позволяет частично или полностью обновить информацию о метке")
     LabelDTO update(@PathVariable Long id, @Valid @RequestBody LabelUpdateDTO data) {
         var label = labelRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Not found"));
         labelMapper.update(data, label);

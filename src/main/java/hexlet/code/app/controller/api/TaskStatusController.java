@@ -36,10 +36,7 @@ public final class TaskStatusController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @Operation(
-            summary = "Создание статуса",
-            description = "Позволяет создать новый статус в приложении"
-    )
+    @Operation(summary = "Создание статуса", description = "Позволяет создать новый статус в приложении")
     TaskStatusDTO create(@Valid @RequestBody TaskStatusCreateDTO data) {
         var taskStatus = taskStatusMapper.map(data);
         taskStatusRepository.save(taskStatus);
@@ -48,19 +45,13 @@ public final class TaskStatusController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @Operation(
-            summary = "Удаление статуса",
-            description = "Позволяет удалить статус из приложения по его идентификатору"
-    )
+    @Operation(summary = "Удаление статуса", description = "Позволяет удалить статус из приложения по его идентификатору")
     void destroy(@PathVariable Long id) {
         taskStatusRepository.deleteById(id);
     }
 
     @GetMapping
-    @Operation(
-            summary = "Получение списка статусов",
-            description = "Позволяет получить список статусов добавленных в приложение"
-    )
+    @Operation(summary = "Получение списка статусов", description = "Позволяет получить список статусов добавленных в приложение")
     ResponseEntity<List<TaskStatusDTO>> index() {
         var taskStatusList = taskStatusRepository.findAll();
         var body = taskStatusList.stream().map(taskStatusMapper::map).toList();
@@ -68,10 +59,7 @@ public final class TaskStatusController {
     }
 
     @GetMapping("/{id}")
-    @Operation(
-            summary = "Получение статуса по идентификатору",
-            description = "Позволяет получить информацию об определенном статусе по его идентификатору"
-    )
+    @Operation(summary = "Получение статуса по идентификатору", description = "Позволяет получить информацию об определенном статусе по его идентификатору")
     TaskStatusDTO show(@PathVariable Long id) {
         var taskStatus = taskStatusRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("TaskStatus not found"));
@@ -79,10 +67,7 @@ public final class TaskStatusController {
     }
 
     @PutMapping("/{id}")
-    @Operation(
-            summary = "Обновление статуса",
-            description = "Позволяет частично или полностью обновить информацию о статусе"
-    )
+    @Operation(summary = "Обновление статуса", description = "Позволяет частично или полностью обновить информацию о статусе")
     TaskStatusDTO update(@PathVariable Long id, @Valid @RequestBody TaskStatusUpdateDTO data) {
         var taskStatus = taskStatusRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("TaskStatus not found"));

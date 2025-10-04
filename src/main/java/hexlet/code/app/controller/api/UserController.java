@@ -36,10 +36,7 @@ public final class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @Operation(
-            summary = "Создание пользователя",
-            description = "Позволяет создать нового пользователя в приложении"
-    )
+    @Operation(summary = "Создание пользователя", description = "Позволяет создать нового пользователя в приложении")
     UserDTO create(@Valid @RequestBody UserCreateDTO data) {
         var user = userMapper.map(data);
         userRepository.save(user);
@@ -48,19 +45,13 @@ public final class UserController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @Operation(
-            summary = "Удаление пользователя",
-            description = "Позволяет удалить пользователя из приложения по его идентификатору"
-    )
+    @Operation(summary = "Удаление пользователя", description = "Позволяет удалить пользователя из приложения по его идентификатору")
     void destroy(@PathVariable Long id) {
         userRepository.deleteById(id);
     }
 
     @GetMapping
-    @Operation(
-            summary = "Получение списка пользователей",
-            description = "Позволяет получить список всех пользователей добавленных в приложение"
-    )
+    @Operation(summary = "Получение списка пользователей", description = "Позволяет получить список всех пользователей добавленных в приложение")
     ResponseEntity<List<UserDTO>> index() {
         var users = userRepository.findAll();
         var body = users.stream().map(userMapper::map).toList();
@@ -68,20 +59,14 @@ public final class UserController {
     }
 
     @GetMapping("/{id}")
-    @Operation(
-            summary = "Получение пользователя по идентификатору",
-            description = "Позволяет получить информацию об определенном пользователе по его идентификатору"
-    )
+    @Operation(summary = "Получение пользователя по идентификатору", description = "Позволяет получить информацию об определенном пользователе по его идентификатору")
     UserDTO show(@PathVariable Long id) {
         var user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Not found"));
         return userMapper.map(user);
     }
 
     @PutMapping("/{id}")
-    @Operation(
-            summary = "Обновление пользователя",
-            description = "Позволяет частично или полностью обновить информацию о пользователе"
-    )
+    @Operation(summary = "Обновление пользователя", description = "Позволяет частично или полностью обновить информацию о пользователе")
     UserDTO update(@PathVariable Long id, @Valid @RequestBody UserUpdateDTO data) {
         var user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Not found"));
         userMapper.update(data, user);
