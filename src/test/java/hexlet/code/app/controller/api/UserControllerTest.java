@@ -12,7 +12,6 @@ import hexlet.code.app.model.User;
 import hexlet.code.app.repository.UserRepository;
 import hexlet.code.app.util.ModelGenerator;
 import java.nio.charset.StandardCharsets;
-import java.util.Map;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -72,6 +71,16 @@ class UserControllerTest {
 
     @Test
     @WithMockUser
+    public void testDestroy() throws Exception {
+        userRepository.save(testUser);
+
+        mockMvc.perform(delete("/api/users/" + testUser.getId())).andExpect(status().isNoContent());
+
+        assertThat(userRepository.findById(testUser.getId())).isEmpty();
+    }
+
+    @Test
+    @WithMockUser
     public void testIndex() throws Exception {
         mockMvc.perform(get("/api/users")).andExpect(status().isOk());
     }
@@ -101,28 +110,15 @@ class UserControllerTest {
 
     @Test
     @WithMockUser
-    public void testDestroy() throws Exception {
-        userRepository.save(testUser);
-
-        mockMvc.perform(delete("/api/users/" + testUser.getId()))
-                .andExpect(status().isNoContent());
-
-        assertThat(userRepository.findById(testUser.getId())).isEmpty();
-    }
-
-    @Test
-    @WithMockUser
     public void testShow() throws Exception {
         userRepository.save(testUser);
-        var response = mockMvc.perform(get("/api/users/" + testUser.getId())).andExpect(status().isOk())
-                .andReturn();
+        var response = mockMvc.perform(get("/api/users/" + testUser.getId())).andExpect(status().isOk()).andReturn();
         var body = response.getResponse().getContentAsString();
 
         assertThatJson(body).and(v -> v.node("id").isEqualTo(testUser.getId()),
                 v -> v.node("firstName").isEqualTo(testUser.getFirstName()),
                 v -> v.node("lastName").isEqualTo(testUser.getLastName()),
-                v -> v.node("email").isEqualTo(testUser.getEmail())
-        );
+                v -> v.node("email").isEqualTo(testUser.getEmail()));
     }
 
     @Test
