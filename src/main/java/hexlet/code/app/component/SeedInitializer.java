@@ -33,14 +33,20 @@ public class SeedInitializer implements CommandLineRunner {
     private void createLabel(String name) {
         var label = new Label();
         label.setName(name);
-        labelRepository.save(label);
+
+        if (labelRepository.findByName(label.getName()).isEmpty()) {
+            labelRepository.save(label);
+        }
     }
 
     private void createTaskStatus(String name, String slug) {
         var status = new TaskStatus();
         status.setName(name);
         status.setSlug(slug);
-        taskStatusRepository.save(status);
+
+        if (taskStatusRepository.findBySlug(status.getSlug()).isEmpty()) {
+            taskStatusRepository.save(status);
+        }
     }
 
     @Override
