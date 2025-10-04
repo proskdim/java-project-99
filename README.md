@@ -17,6 +17,9 @@ Task Manager – система управления задачами, подо�
 
 ### Ссылка на проект
 ```java
+// username: hexlet@example.com
+// password: qwerty
+
 https://java-project-99-aixq.onrender.com
 ```
 
