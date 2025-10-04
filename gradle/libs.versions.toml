@@ -20,6 +20,7 @@ versions-plugin = "0.52.0"
 shadow-plugin = "9.1.0"
 sonarqube-plugin = "6.3.1.5724"
 spotless-plugin = "7.2.1"
+sentry-boot-version = "8.15.0"
 
 jackson-databind-nullable = "0.2.7"
 springdoc-openapi-ui = "2.8.13"
@@ -44,6 +45,7 @@ springBootStarterOauth2ResourceServer = { module = "org.springframework.boot:spr
 springBootStarterTest = { module = "org.springframework.boot:spring-boot-starter-test", version.ref = "spring-boot-version" }
 springBootDevtools = { module = "org.springframework.boot:spring-boot-devtools", version.ref = "spring-boot-version" }
 springBootConfigProcessor = { module = "org.springframework.boot:spring-boot-configuration-processor", version.ref = "spring-boot-version" }
+springBootStarterSentry = { module = "io.sentry:sentry-spring-boot-starter", version.ref = "sentry-boot-version" }
 
 # Spring Security Test
 springSecurityTest = { module = "org.springframework.security:spring-security-test", version.ref = "spring-security-test-version" }

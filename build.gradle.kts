@@ -37,6 +37,7 @@ dependencies {
     implementation(libs.springBootStarterOauth2ResourceServer)
     implementation(libs.springBootDevtools)
     implementation(libs.springBootConfigProcessor)
+    implementation(libs.springBootStarterSentry)
 
     // DB
     implementation(libs.postgresql)
