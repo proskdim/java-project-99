@@ -9,5 +9,19 @@
 [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=proskdim_java-project-99&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=proskdim_java-project-99)
 [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=proskdim_java-project-99&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=proskdim_java-project-99)
 
+### Описание проекта
 
-### https://java-project-99-aixq.onrender.com
+Task Manager – система управления задачами, подобная http://www.redmine.org/. 
+Она позволяет ставить задачи, назначать исполнителей и менять их статусы. 
+Для работы с системой требуется регистрация и аутентификация.
+
+### Ссылка на проект
+```java
+https://java-project-99-aixq.onrender.com
+```
+
+### Ссылка на swagger
+```java
+https://java-project-99-aixq.onrender.com/swagger-ui/index.html
+```
+
