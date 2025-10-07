@@ -3,11 +3,9 @@ package hexlet.code.controller.api;
 import hexlet.code.dto.TaskStatusCreateDTO;
 import hexlet.code.dto.TaskStatusDTO;
 import hexlet.code.dto.TaskStatusUpdateDTO;
-import hexlet.code.mapper.TaskStatusMapper;
-import hexlet.code.repository.TaskStatusRepository;
+import hexlet.code.service.TaskStatusService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -29,48 +27,38 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Контроллер статусов задач", description = "Контроллер предназначен для взаимодействия со статусами задач")
 public final class TaskStatusController {
 
-    private final TaskStatusRepository taskStatusRepository;
-    private final TaskStatusMapper taskStatusMapper;
+    private final TaskStatusService taskStatusService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Создание статуса", description = "Позволяет создать новый статус в приложении")
     TaskStatusDTO create(@Valid @RequestBody TaskStatusCreateDTO data) {
-        var taskStatus = taskStatusMapper.map(data);
-        taskStatusRepository.save(taskStatus);
-        return taskStatusMapper.map(taskStatus);
+        return taskStatusService.create(data);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Удаление статуса", description = "Позволяет удалить статус из приложения по его идентификатору")
     void destroy(@PathVariable Long id) {
-        taskStatusRepository.deleteById(id);
+        taskStatusService.delete(id);
     }
 
     @GetMapping
     @Operation(summary = "Получение списка статусов", description = "Позволяет получить список статусов добавленных в приложение")
     ResponseEntity<List<TaskStatusDTO>> index() {
-        var taskStatusList = taskStatusRepository.findAll();
-        var body = taskStatusList.stream().map(taskStatusMapper::map).toList();
+        var body = taskStatusService.getAll();
         return ResponseEntity.ok().header("X-Total-Count", Integer.toString(body.size())).body(body);
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Получение статуса по идентификатору", description = "Позволяет получить информацию об определенном статусе по его идентификатору")
     TaskStatusDTO show(@PathVariable Long id) {
-        var taskStatus = taskStatusRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("TaskStatus not found"));
-        return taskStatusMapper.map(taskStatus);
+        return taskStatusService.findById(id);
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "Обновление статуса", description = "Позволяет частично или полностью обновить информацию о статусе")
     TaskStatusDTO update(@PathVariable Long id, @Valid @RequestBody TaskStatusUpdateDTO data) {
-        var taskStatus = taskStatusRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("TaskStatus not found"));
-        taskStatusMapper.update(data, taskStatus);
-        taskStatusRepository.save(taskStatus);
-        return taskStatusMapper.map(taskStatus);
+        return taskStatusService.update(data, id);
     }
 }

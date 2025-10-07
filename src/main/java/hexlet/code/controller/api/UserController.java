@@ -3,11 +3,10 @@ package hexlet.code.controller.api;
 import hexlet.code.dto.UserCreateDTO;
 import hexlet.code.dto.UserDTO;
 import hexlet.code.dto.UserUpdateDTO;
-import hexlet.code.mapper.UserMapper;
-import hexlet.code.repository.UserRepository;
+import hexlet.code.service.UserService;
+import hexlet.code.util.UserUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -31,16 +30,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     private static final String CURRENT_USER = "@userUtils.getCurrentUser().getId() == #id";
-    private final UserRepository userRepository;
-    private final UserMapper userMapper;
+    private final UserService userService;
+    private final UserUtils userUtils;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Создание пользователя", description = "Позволяет создать нового пользователя в приложении")
     UserDTO create(@Valid @RequestBody UserCreateDTO data) {
-        var user = userMapper.map(data);
-        userRepository.save(user);
-        return userMapper.map(user);
+        return userService.create(data);
     }
 
     @DeleteMapping("/{id}")
@@ -48,31 +45,26 @@ public class UserController {
     @Operation(summary = "Удаление пользователя", description = "Позволяет удалить пользователя из приложения по его идентификатору")
     @PreAuthorize(CURRENT_USER)
     void destroy(@PathVariable Long id) {
-        userRepository.deleteById(id);
+        userService.delete(id);
     }
 
     @GetMapping
     @Operation(summary = "Получение списка пользователей", description = "Позволяет получить список всех пользователей добавленных в приложение")
     ResponseEntity<List<UserDTO>> index() {
-        var users = userRepository.findAll();
-        var body = users.stream().map(userMapper::map).toList();
+        var body = userService.getAll();
         return ResponseEntity.ok().header("X-Total-Count", Integer.toString(body.size())).body(body);
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Получение пользователя по идентификатору", description = "Позволяет получить информацию об определенном пользователе по его идентификатору")
     UserDTO show(@PathVariable Long id) {
-        var user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Not found"));
-        return userMapper.map(user);
+        return userService.findById(id);
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "Обновление пользователя", description = "Позволяет частично или полностью обновить информацию о пользователе")
     @PreAuthorize(CURRENT_USER)
     UserDTO update(@PathVariable Long id, @Valid @RequestBody UserUpdateDTO data) {
-        var user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Not found"));
-        userMapper.update(data, user);
-        userRepository.save(user);
-        return userMapper.map(user);
+        return userService.update(data, id);
     }
 }
