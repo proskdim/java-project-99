@@ -3,44 +3,17 @@ package hexlet.code.service;
 import hexlet.code.dto.LabelCreateDTO;
 import hexlet.code.dto.LabelDTO;
 import hexlet.code.dto.LabelUpdateDTO;
-import hexlet.code.mapper.LabelMapper;
-import hexlet.code.repository.LabelRepository;
-import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
 
-@Service
-@AllArgsConstructor
-public class LabelService {
+public interface LabelService {
 
-    private final LabelRepository labelRepository;
-    private final LabelMapper labelMapper;
+    LabelDTO create(LabelCreateDTO data);
 
-    public LabelDTO create(LabelCreateDTO data) {
-        var label = labelMapper.map(data);
-        labelRepository.save(label);
-        return labelMapper.map(label);
-    }
+    void delete(Long id);
 
-    public void delete(Long id) {
-        labelRepository.deleteById(id);
-    }
+    LabelDTO findById(Long id);
 
-    public LabelDTO findById(Long id) {
-        var label = labelRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Not found"));
-        return labelMapper.map(label);
-    }
+    List<LabelDTO> getAll();
 
-    public List<LabelDTO> getAll() {
-        var labels = labelRepository.findAll();
-        return labels.stream().map(labelMapper::map).toList();
-    }
-
-    public LabelDTO update(LabelUpdateDTO data, Long id) {
-        var label = labelRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Not found"));
-        labelMapper.update(data, label);
-        labelRepository.save(label);
-        return labelMapper.map(label);
-    }
+    LabelDTO update(LabelUpdateDTO data, Long id);
 }
