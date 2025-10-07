@@ -2,6 +2,7 @@ package hexlet.code.controller.api;
 
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -9,11 +10,15 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hexlet.code.dto.TaskStatusDTO;
+import hexlet.code.mapper.TaskStatusMapper;
 import hexlet.code.model.TaskStatus;
 import hexlet.code.repository.TaskStatusRepository;
 import hexlet.code.util.ModelGenerator;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Map;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.BeforeEach;
@@ -44,6 +49,9 @@ class TaskStatusControllerTest {
     private MockMvc mockMvc;
 
     private TaskStatus testTaskStatus;
+
+    @Autowired
+    private TaskStatusMapper taskStatusMapper;
 
     @BeforeEach
     public void beforeEach() {
@@ -97,7 +105,17 @@ class TaskStatusControllerTest {
     @Test
     @WithMockUser
     public void testIndex() throws Exception {
-        mockMvc.perform(get("/api/task_statuses")).andExpect(status().isOk());
+        taskStatusRepository.save(testTaskStatus);
+
+        var result = mockMvc.perform(get("/api/task_statuses").with(jwt())).andExpect(status().isOk()).andReturn();
+
+        var body = result.getResponse().getContentAsString();
+        List<TaskStatusDTO> actualDTOs = objectMapper.readValue(body, new TypeReference<>() {
+        });
+
+        List<TaskStatusDTO> expectedDTOs = taskStatusRepository.findAll().stream().map(taskStatusMapper::map).toList();
+
+        assertThat(actualDTOs).usingRecursiveComparison().isEqualTo(expectedDTOs);
     }
 
     @Test

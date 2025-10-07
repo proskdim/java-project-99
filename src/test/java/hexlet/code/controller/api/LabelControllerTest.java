@@ -2,6 +2,7 @@ package hexlet.code.controller.api;
 
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -9,11 +10,15 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hexlet.code.dto.LabelDTO;
+import hexlet.code.mapper.LabelMapper;
 import hexlet.code.model.Label;
 import hexlet.code.repository.LabelRepository;
 import hexlet.code.util.ModelGenerator;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Map;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.BeforeEach;
@@ -44,6 +49,9 @@ class LabelControllerTest {
     private MockMvc mockMvc;
 
     private Label testLabel;
+
+    @Autowired
+    private LabelMapper labelMapper;
 
     @BeforeEach
     public void beforeEach() {
@@ -96,7 +104,18 @@ class LabelControllerTest {
     @Test
     @WithMockUser
     public void testIndex() throws Exception {
-        mockMvc.perform(get("/api/labels")).andExpect(status().isOk());
+        labelRepository.save(testLabel);
+
+        var result = mockMvc.perform(get("/api/labels").with(jwt())).andExpect(status().isOk()).andReturn();
+
+        var body = result.getResponse().getContentAsString();
+
+        List<LabelDTO> labelDTOS = objectMapper.readValue(body, new TypeReference<>() {
+        });
+
+        var actual = labelDTOS.stream().map(labelMapper::map).toList();
+        var expected = labelRepository.findAll();
+        assertThat(actual).containsExactlyInAnyOrderElementsOf(expected);
     }
 
     @Test

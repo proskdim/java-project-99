@@ -39,6 +39,11 @@ public abstract class TaskMapper {
     @Mapping(target = "labels", source = "taskLabelIds")
     public abstract Task map(TaskCreateDTO dto);
 
+    @Mapping(target = "assignee", source = "assigneeId")
+    @Mapping(target = "taskStatus", source = "status")
+    @Mapping(target = "labels", source = "taskLabelIds")
+    public abstract Task map(TaskDTO dto);
+
     public Set<Long> toDto(Set<Label> taskLabels) {
         return taskLabels.stream().map(Label::getId).collect(Collectors.toSet());
     }

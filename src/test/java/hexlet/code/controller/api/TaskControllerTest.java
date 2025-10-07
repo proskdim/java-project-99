@@ -2,6 +2,7 @@ package hexlet.code.controller.api;
 
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -9,7 +10,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hexlet.code.dto.TaskDTO;
 import hexlet.code.mapper.TaskMapper;
 import hexlet.code.model.Task;
 import hexlet.code.repository.LabelRepository;
@@ -18,6 +21,7 @@ import hexlet.code.repository.TaskStatusRepository;
 import hexlet.code.repository.UserRepository;
 import hexlet.code.util.ModelGenerator;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Map;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.BeforeEach;
@@ -118,7 +122,18 @@ class TaskControllerTest {
     @Test
     @WithMockUser
     public void testIndex() throws Exception {
-        mockMvc.perform(get("/api/tasks")).andExpect(status().isOk());
+        taskRepository.save(testTask);
+
+        var result = mockMvc.perform(get("/api/tasks").with(jwt())).andExpect(status().isOk()).andReturn();
+
+        var body = result.getResponse().getContentAsString();
+
+        List<TaskDTO> actualDTOs = objectMapper.readValue(body, new TypeReference<>() {
+        });
+
+        List<TaskDTO> expectedDTOs = taskRepository.findAll().stream().map(taskMapper::map).toList();
+
+        assertThat(actualDTOs).usingRecursiveComparison().isEqualTo(expectedDTOs);
     }
 
     @Test

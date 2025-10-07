@@ -7,12 +7,16 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hexlet.code.dto.UserDTO;
 import hexlet.code.dto.UserUpdateDTO;
+import hexlet.code.mapper.UserMapper;
 import hexlet.code.model.User;
 import hexlet.code.repository.UserRepository;
 import hexlet.code.util.ModelGenerator;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,6 +49,9 @@ class UserControllerTest {
 
     private User testUser;
     private SecurityMockMvcRequestPostProcessors.JwtRequestPostProcessor token;
+
+    @Autowired
+    private UserMapper userMapper;
 
     @BeforeEach
     public void beforeEach() {
@@ -86,7 +93,17 @@ class UserControllerTest {
     @Test
     @WithMockUser
     public void testIndex() throws Exception {
-        mockMvc.perform(get("/api/users")).andExpect(status().isOk());
+        userRepository.save(testUser);
+
+        var result = mockMvc.perform(get("/api/users").with(jwt())).andExpect(status().isOk()).andReturn();
+
+        var body = result.getResponse().getContentAsString();
+        List<UserDTO> actualDTOs = objectMapper.readValue(body, new TypeReference<>() {
+        });
+
+        List<UserDTO> expectedDTOs = userRepository.findAll().stream().map(userMapper::map).toList();
+
+        assertThat(actualDTOs).usingRecursiveComparison().isEqualTo(expectedDTOs);
     }
 
     @Test
