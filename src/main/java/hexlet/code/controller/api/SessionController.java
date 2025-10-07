@@ -4,6 +4,7 @@ import hexlet.code.dto.AuthRequest;
 import hexlet.code.util.JWTUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,14 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api")
+@AllArgsConstructor
 @Tag(name = "Контроллер аутентификации пользователя", description = "Контроллер предназначен для осуществления входа пользователя в систему")
 public final class SessionController {
 
-    @Autowired
-    private JWTUtils jwtUtils;
-
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    private final JWTUtils jwtUtils;
+    private final AuthenticationManager authenticationManager;
 
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.CREATED)

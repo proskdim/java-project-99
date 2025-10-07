@@ -10,7 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,14 +25,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/labels")
+@AllArgsConstructor
 @Tag(name = "Контроллер меток", description = "Метки – гибкая альтернатива категориям. Позволяют группировать задачи по разным признакам, например багам, фичам и так далее.")
 public final class LabelController {
 
-    @Autowired
-    private LabelRepository labelRepository;
-
-    @Autowired
-    private LabelMapper labelMapper;
+    private final LabelRepository labelRepository;
+    private final LabelMapper labelMapper;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
