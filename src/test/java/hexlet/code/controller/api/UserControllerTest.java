@@ -55,6 +55,8 @@ class UserControllerTest {
 
     @BeforeEach
     public void beforeEach() {
+        userRepository.deleteAll();
+
         mockMvc = MockMvcBuilders.webAppContextSetup(wac).defaultResponseCharacterEncoding(StandardCharsets.UTF_8)
                 .apply(springSecurity()).build();
         testUser = Instancio.create(modelGenerator.userModel());

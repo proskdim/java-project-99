@@ -55,6 +55,8 @@ class LabelControllerTest {
 
     @BeforeEach
     public void beforeEach() {
+        labelRepository.deleteAll();
+
         mockMvc = MockMvcBuilders.webAppContextSetup(wac).defaultResponseCharacterEncoding(StandardCharsets.UTF_8)
                 .apply(springSecurity()).build();
 

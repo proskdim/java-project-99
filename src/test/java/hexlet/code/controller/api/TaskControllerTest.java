@@ -20,6 +20,9 @@ import hexlet.code.repository.TaskRepository;
 import hexlet.code.repository.TaskStatusRepository;
 import hexlet.code.repository.UserRepository;
 import hexlet.code.util.ModelGenerator;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Transactional;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +38,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 @SpringBootTest
+@Transactional
 class TaskControllerTest {
 
     @Autowired
@@ -61,12 +65,27 @@ class TaskControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @PersistenceContext
+    private EntityManager entityManager;
+
     private MockMvc mockMvc;
 
     private Task testTask;
 
     @BeforeEach
     public void beforeEach() {
+        taskRepository.deleteAll();
+        entityManager.flush();
+
+        taskStatusRepository.deleteAll();
+        entityManager.flush();
+
+        labelRepository.deleteAll();
+        entityManager.flush();
+
+        userRepository.deleteAll();
+        entityManager.flush();
+
         mockMvc = MockMvcBuilders.webAppContextSetup(wac).defaultResponseCharacterEncoding(StandardCharsets.UTF_8)
                 .apply(springSecurity()).build();
 

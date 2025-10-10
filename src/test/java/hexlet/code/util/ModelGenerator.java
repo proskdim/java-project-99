@@ -4,6 +4,7 @@ import hexlet.code.model.Label;
 import hexlet.code.model.Task;
 import hexlet.code.model.TaskStatus;
 import hexlet.code.model.User;
+import java.util.HashSet;
 import java.util.Set;
 import net.datafaker.Faker;
 import org.instancio.Instancio;
@@ -26,7 +27,11 @@ public final class ModelGenerator {
         return Instancio.of(Task.class).ignore(Select.field(Task::getId))
                 .supply(Select.field(Task::getAssignee), () -> Instancio.create(userModel()))
                 .supply(Select.field(Task::getTaskStatus), () -> Instancio.create(taskStatusModel()))
-                .supply(Select.field(Task::getLabels), () -> Set.of(Instancio.create(labelModel()))).toModel();
+                .supply(Select.field(Task::getLabels), () -> {
+                    Set<Label> labels = new HashSet<>();
+                    labels.add(Instancio.create(labelModel()));
+                    return labels;
+                }).toModel();
     }
 
     public Model<TaskStatus> taskStatusModel() {

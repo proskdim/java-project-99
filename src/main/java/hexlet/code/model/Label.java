@@ -28,9 +28,7 @@ public final class Label {
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
-    @NotBlank
-    @Size(min = 3, max = 1000)
-    @Column(columnDefinition = "TEXT", unique = true)
+    @NotBlank @Size(min = 3, max = 1000) @Column(columnDefinition = "TEXT", unique = true)
     @EqualsAndHashCode.Include
     private String name;
 

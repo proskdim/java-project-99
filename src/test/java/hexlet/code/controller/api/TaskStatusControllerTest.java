@@ -55,6 +55,8 @@ class TaskStatusControllerTest {
 
     @BeforeEach
     public void beforeEach() {
+        taskStatusRepository.deleteAll();
+
         mockMvc = MockMvcBuilders.webAppContextSetup(context).defaultResponseCharacterEncoding(StandardCharsets.UTF_8)
                 .apply(springSecurity()).build();
 
