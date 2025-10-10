@@ -7,12 +7,14 @@ import hexlet.code.repository.LabelRepository;
 import hexlet.code.repository.TaskStatusRepository;
 import hexlet.code.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
 @AllArgsConstructor
+@Slf4j
 public class SeedInitializer implements CommandLineRunner {
 
     private final UserRepository userRepository;
@@ -49,14 +51,14 @@ public class SeedInitializer implements CommandLineRunner {
             admin.setPassword(passwordEncoder.encode(adminPassword));
             userRepository.save(admin);
 
-            System.out.println("Создан администратор по умолчанию.");
+            log.info("Создан администратор по умолчанию.");
         }
 
         seedTaskStatuses();
-        System.out.println("Добавлены статусы.");
+        log.info("Добавлены статусы.");
 
         seedLabels();
-        System.out.println("Добавлены метки.");
+        log.info("Добавлены метки.");
     }
 
     private void seedLabels() {
