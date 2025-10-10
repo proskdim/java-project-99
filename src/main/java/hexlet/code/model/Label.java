@@ -22,13 +22,16 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Entity
 @Table(name = "labels")
 @EntityListeners(AuditingEntityListener.class)
-@EqualsAndHashCode
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public final class Label {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
-    @NotBlank @Size(min = 3, max = 1000) @Column(columnDefinition = "TEXT", unique = true)
+    @NotBlank
+    @Size(min = 3, max = 1000)
+    @Column(columnDefinition = "TEXT", unique = true)
+    @EqualsAndHashCode.Include
     private String name;
 
     @CreatedDate
