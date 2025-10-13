@@ -13,6 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hexlet.code.dto.TaskDTO;
+import hexlet.code.extension.PostgresDbCleanerExtension;
 import hexlet.code.mapper.TaskMapper;
 import hexlet.code.model.Task;
 import hexlet.code.repository.LabelRepository;
@@ -22,13 +23,13 @@ import hexlet.code.repository.UserRepository;
 import hexlet.code.util.ModelGenerator;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.transaction.Transactional;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -38,7 +39,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 @SpringBootTest
-@Transactional
+@ExtendWith(PostgresDbCleanerExtension.class)
 class TaskControllerTest {
 
     @Autowired
@@ -74,18 +75,6 @@ class TaskControllerTest {
 
     @BeforeEach
     public void beforeEach() {
-        taskRepository.deleteAll();
-        entityManager.flush();
-
-        taskStatusRepository.deleteAll();
-        entityManager.flush();
-
-        labelRepository.deleteAll();
-        entityManager.flush();
-
-        userRepository.deleteAll();
-        entityManager.flush();
-
         mockMvc = MockMvcBuilders.webAppContextSetup(wac).defaultResponseCharacterEncoding(StandardCharsets.UTF_8)
                 .apply(springSecurity()).build();
 
