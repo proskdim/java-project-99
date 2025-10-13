@@ -43,7 +43,10 @@ public class SecurityConfig {
             HandlerMappingIntrospector handlerMappingIntrospector) throws Exception {
         var mvcMatcherBuilder = new MvcRequestMatcher.Builder(handlerMappingIntrospector);
 
-        return httpSecurity.csrf(AbstractHttpConfigurer::disable)
+        // CSRF отключён, потому что API stateless
+        httpSecurity.csrf(AbstractHttpConfigurer::disable);
+
+        return httpSecurity
                 .authorizeHttpRequests(auth -> auth.requestMatchers(mvcMatcherBuilder.pattern("/")).permitAll()
                         .requestMatchers(mvcMatcherBuilder.pattern("/index.html")).permitAll()
                         .requestMatchers(mvcMatcherBuilder.pattern("/swagger-ui/**")).permitAll()
