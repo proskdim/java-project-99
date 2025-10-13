@@ -44,8 +44,7 @@ public class SecurityConfig {
             HandlerMappingIntrospector handlerMappingIntrospector) throws Exception {
         var mvcMatcherBuilder = new MvcRequestMatcher.Builder(handlerMappingIntrospector);
 
-        return httpSecurity
-                .csrf(AbstractHttpConfigurer::disable)  // java:S4502 - JWT tokens are used for authentication
+        return httpSecurity.csrf(AbstractHttpConfigurer::disable) // java:S4502 - JWT tokens are used for authentication
                 .authorizeHttpRequests(auth -> auth.requestMatchers(mvcMatcherBuilder.pattern("/")).permitAll()
                         .requestMatchers(mvcMatcherBuilder.pattern("/index.html")).permitAll()
                         .requestMatchers(mvcMatcherBuilder.pattern("/swagger-ui/**")).permitAll()
