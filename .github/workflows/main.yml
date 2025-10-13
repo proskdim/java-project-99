@@ -15,7 +15,7 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@6a96db5a3f33ee3428706da0bfc3de5c5a8f698c
+        uses: gradle/actions/setup-gradle@v4
         with:
           fetch-depth: 0
       - name: Execute Gradle build

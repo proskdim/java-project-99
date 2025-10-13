@@ -97,7 +97,9 @@ sonar {
         property("sonar.projectKey", "proskdim_java-project-99")
         property("sonar.organization", "proskdim")
         property("sonar.host.url", "https://sonarcloud.io")
+        property("sonar.exclusions", "**/.github/**")
     }
+
 }
 
 application {
