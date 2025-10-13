@@ -38,15 +38,14 @@ public class SecurityConfig {
         return new ProviderManager(authProvider);
     }
 
+    @SuppressWarnings("java:S4502")
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity,
             HandlerMappingIntrospector handlerMappingIntrospector) throws Exception {
         var mvcMatcherBuilder = new MvcRequestMatcher.Builder(handlerMappingIntrospector);
 
-        // CSRF отключён, потому что API stateless
-        httpSecurity.csrf(AbstractHttpConfigurer::disable);
-
         return httpSecurity
+                .csrf(AbstractHttpConfigurer::disable)  // java:S4502 - JWT tokens are used for authentication
                 .authorizeHttpRequests(auth -> auth.requestMatchers(mvcMatcherBuilder.pattern("/")).permitAll()
                         .requestMatchers(mvcMatcherBuilder.pattern("/index.html")).permitAll()
                         .requestMatchers(mvcMatcherBuilder.pattern("/swagger-ui/**")).permitAll()
