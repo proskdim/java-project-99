@@ -6,14 +6,15 @@ import hexlet.code.model.User;
 import hexlet.code.repository.LabelRepository;
 import hexlet.code.repository.TaskStatusRepository;
 import hexlet.code.repository.UserRepository;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Slf4j
 public class SeedInitializer implements CommandLineRunner {
 
@@ -21,6 +22,12 @@ public class SeedInitializer implements CommandLineRunner {
     private final TaskStatusRepository taskStatusRepository;
     private final LabelRepository labelRepository;
     private final PasswordEncoder passwordEncoder;
+
+    @Value("${app.seed.admin.password:qwerty}")
+    private String adminPassword;
+
+    @Value("${app.seed.admin.email:hexlet@example.com}")
+    private String adminEmail;
 
     private void createLabel(String name) {
         var label = new Label();
@@ -43,11 +50,9 @@ public class SeedInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        String adminEmail = "hexlet@example.com";
         if (userRepository.findByEmail(adminEmail).isEmpty()) {
             User admin = new User();
             admin.setEmail(adminEmail);
-            String adminPassword = "qwerty";
             admin.setPassword(passwordEncoder.encode(adminPassword));
             userRepository.save(admin);
 
